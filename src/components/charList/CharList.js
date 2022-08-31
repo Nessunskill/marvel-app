@@ -73,21 +73,21 @@ class CharList extends Component {
 
     // Focus character
     onFocusCharacter = (i) => {
-        // this.setState(({characters}) => {
-        //     const newCharacters = characters.map((item, index) => {
-        //         if (index !== i) {
-        //             item.focused = false;
-        //             return item;
-        //         };
+        this.setState(({characters}) => {
+            const newCharacters = characters.map((item, index) => {
+                if (index !== i) {
+                    item.focused = false;
+                    return item;
+                };
 
-        //         item.focused = true;
-        //         return item;
-        //     });
+                item.focused = true;
+                return item;
+            });
 
-        //     return {
-        //         characters: newCharacters
-        //     }
-        // });
+            return {
+                characters: newCharacters
+            }
+        });
     }
 
     // Refs
@@ -98,8 +98,8 @@ class CharList extends Component {
     }
 
     focusOnItem = (id) => {
-        this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
-        this.itemRefs[id].classList.add('char__item_selected');
+      // this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
+      //  this.itemRefs[id].classList.add('char__item_selected');
         this.itemRefs[id].focus();
     }
 
