@@ -101,6 +101,8 @@ class CharList extends Component {
         this.itemRefs.forEach(item => item.classList.remove('char__item_selected'));
         this.itemRefs[id].classList.add('char__item_selected');
         this.itemRefs[id].focus();
+
+        console.log(this.itemRefs[id]);
     }
 
     render() {
