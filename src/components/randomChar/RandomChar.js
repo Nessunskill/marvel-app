@@ -1,4 +1,4 @@
-import { Component } from 'react/cjs/react.production.min';
+import {useState, useEffect} from 'react';
 import MarvelServices from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
@@ -6,78 +6,70 @@ import Spinner from '../spinner/Spinner';
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
-class RandomChar extends Component {
-    state = {
-        character: {},
-        loading: false,
-        error: false
-    }
+const RandomChar = () => {
+    const [character, setCharacters] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false);
 
-    marvelServices = new MarvelServices();
+    const marvelServices = new MarvelServices();
 
     // Component Hooks
-    componentDidMount = () => {
-        this.getCharacter(1011937);
-    }
+    useEffect(() => {
+        getCharacter(1011937);
+    }, []);
+
 
     // Error
-    onError = () => {
-        this.setState({error: true, loading: false});
+    const onError = () => {
+        setError(true);
+        setLoading(false);
     }
 
     // Loading character
-    onCharacterLoad = (character) => {
-        this.setState(() => {
-            return {
-                character: character,
-                loading: false,
-                error: false
-            }
-        });
+    const onCharacterLoad = (character) => {
+        setCharacters(character);
+        setLoading(false);
+        setError(false);
     }
 
     // Getting character
-    getCharacter = (id) => {
-        this.setState({loading: !this.state.loading})
-        this.marvelServices
+    const getCharacter = (id) => {
+        setLoading(loading => !loading);
+        marvelServices
             .getCharacterById(id)
-            .then(this.onCharacterLoad)
-            .catch(this.onError);
+            .then(onCharacterLoad)
+            .catch(onError);
     }
 
     // Getting another character
-    onAnotherCharacter = () => {
+    const onAnotherCharacter = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
         //const id = 1011000;
-        this.getCharacter(id);
+        getCharacter(id);
     }
 
-    render() {
-        const {character, loading, error} = this.state;
-
-        return (
-            <div className="randomchar">
-                {loading && !error ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner/></div> : null}
-                {error && !loading ? <ErrorMessage/> : null}
-                {!loading && !error ? <CharacterBlock character={character}/> : null}
-                <div className="randomchar__static">
-                    <p className="randomchar__title">
-                        Random character for today!<br/>
-                        Do you want to get to know him better?
-                    </p>
-                    <p className="randomchar__title">
-                        Or choose another one
-                    </p>
-                    <button 
-                            onClick={this.onAnotherCharacter} 
-                            className="button button__main">
-                        <div className="inner">try it</div>
-                    </button>
-                    <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
-                </div>
+    return (
+        <div className="randomchar">
+            {loading && !error ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner/></div> : null}
+            {error && !loading ? <ErrorMessage/> : null}
+            {!loading && !error ? <CharacterBlock character={character}/> : null}
+            <div className="randomchar__static">
+                <p className="randomchar__title">
+                    Random character for today!<br/>
+                    Do you want to get to know him better?
+                </p>
+                <p className="randomchar__title">
+                    Or choose another one
+                </p>
+                <button 
+                        onClick={onAnotherCharacter} 
+                        className="button button__main">
+                    <div className="inner">try it</div>
+                </button>
+                <img src={mjolnir} alt="mjolnir" className="randomchar__decoration"/>
             </div>
-        )
-    }
+        </div>
+    )
 }
 
 const CharacterBlock = (character) => {
