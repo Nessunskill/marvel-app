@@ -81,16 +81,12 @@ const CharList = (props) => {
     // }
 
     // Refs
-    const itemRefs = [];
-
-    const setRef = (ref) => {
-        itemRefs.push(ref);
-    }
+    const itemRefs = useRef([]);
 
     const focusOnItem = (id) => {
-        itemRefs.forEach(item => item.classList.remove('char__item_selected'));
-        itemRefs[id].classList.add('char__item_selected');
-        itemRefs[id].focus();
+        itemRefs.current.forEach(item => item.classList.remove('char__item_selected'));
+        itemRefs.current[id].classList.add('char__item_selected');
+        itemRefs.current[id].focus();
     }
 
     return (
@@ -108,21 +104,19 @@ const CharList = (props) => {
                 
                         return (
                             <li 
-                                // onKeyPress={(e) => {
-                                //     if (e.key === ' ' | e.key === "Enter") {
-                                //         this.props.onCharacterSelect(item.id);
-                                //         this.focusOnItem(i);
-                                //     }
-                                // }}
+                                onKeyPress={(e) => {
+                                    e.preventDefault();
+                                    if (e.key === ' ' | e.key === "Enter") {
+                                        props.onCharacterSelect(item.id);
+                                        focusOnItem(i);
+                                    }
+                                }}
                                 tabIndex={0}
-                                //className="char__item_selected"
-                                 ref={setRef}
-                                className={item.focused ? "char__item char__item_selected" : "char__item"}
+                                ref={el => itemRefs.current[i] = el}
+                                className="char__item"
                                 key={i}
-                                // onClick={() => {this.props.onCharacterSelect(item.id); this.onFocusCharacter(i); this.focusOnItem(i)}}>
-                                onClick={() => {props.onCharacterSelect(item.id); focusOnItem(i)}}>
-                                {/* <img ref={this.characterRef} src={item.thumbnail} alt="abyss" style={{objectFit: objectFitClass}}/> */}
-                                <img src={item.thumbnail} alt="abyss" style={{objectFit: objectFitClass}}/>
+                                onClick={(e) => {props.onCharacterSelect(item.id); focusOnItem(i)}}>
+                                <img src={item.thumbnail} alt={item.name} style={{objectFit: objectFitClass}}/>
                                 <div className="char__name">{item.name}</div>
                             </li>
                         );
