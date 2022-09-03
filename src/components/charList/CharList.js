@@ -8,8 +8,6 @@ import Spinner from '../spinner/Spinner';
 import './charList.scss';
 
 const CharList = (props) => {
-    //characterRef = React.createRef();
-
     const [characters, setCharacters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -60,25 +58,6 @@ const CharList = (props) => {
             .then(onCharactersLoaded)
             .catch(onError);
     }
-
-    // Focus character
-    // const onFocusCharacter = (i) => {
-        // this.setState(({characters}) => {
-        //     const newCharacters = characters.map((item, index) => {
-        //         if (index !== i) {
-        //             item.focused = false;
-        //             return item;
-        //         };
-
-        //         item.focused = true;
-        //         return item;
-        //     });
-
-        //     return {
-        //         characters: newCharacters
-        //     }
-        // });
-    // }
 
     // Refs
     const itemRefs = useRef([]);
