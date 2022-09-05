@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import MarvelServices from '../../services/MarvelServices';
+import useMarvelServices from '../../services/MarvelServices';
 import Spinner from '../spinner/Spinner';
 import Skeleton from '../skeleton/Skeleton';
 
@@ -15,7 +15,7 @@ const CharInfo = (props) => {
     const [homepage, setHomepage] = useState(null);
     const [comics, setComics] = useState(null);
     const [error, setError] = useState(false);
-    const marvelServices = new MarvelServices();
+    const marvelServices = useMarvelServices();
 
     // Component hooks
 

@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import MarvelServices from '../../services/MarvelServices';
+import useMarvelServices from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 
@@ -8,10 +8,10 @@ import mjolnir from '../../resources/img/mjolnir.png';
 
 const RandomChar = () => {
     const [character, setCharacters] = useState({});
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
+    // const [loading, setLoading] = useState(false);
+    // const [error, setError] = useState(false);
 
-    const marvelServices = new MarvelServices();
+    const {loading, error, getCharacterById} = useMarvelServices();
 
     // Component Hooks
     useEffect(() => {
@@ -20,25 +20,18 @@ const RandomChar = () => {
 
 
     // Error
-    const onError = () => {
-        setError(true);
-        setLoading(false);
-    }
+
 
     // Loading character
     const onCharacterLoad = (character) => {
         setCharacters(character);
-        setLoading(false);
-        setError(false);
+        
     }
 
     // Getting character
     const getCharacter = (id) => {
-        setLoading(loading => !loading);
-        marvelServices
-            .getCharacterById(id)
-            .then(onCharacterLoad)
-            .catch(onError);
+          getCharacterById(id)
+            .then(onCharacterLoad);
     }
 
     // Getting another character

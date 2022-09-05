@@ -1,20 +1,19 @@
 import {useState, useEffect, useRef} from 'react';
 
 import React from 'react';
-import MarvelServices from '../../services/MarvelServices';
+import useMarvelServices from '../../services/MarvelServices';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 import Spinner from '../spinner/Spinner';
 
 import './charList.scss';
 
 const CharList = (props) => {
+    const {loading, error, getCharactersByOffset} = useMarvelServices();
+
     const [characters, setCharacters] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+
     const [offset, setOffset] = useState(210);
     const [loadingMore, setLoadingMore] = useState(false);
-
-    const marvelServices = new MarvelServices();
 
     useEffect(() => {
         getCharacters(offset);
@@ -22,41 +21,30 @@ const CharList = (props) => {
     }, []);
 
     // Error
-    const onError = () => {
-        setError(true);
-        setLoading(false);
-        setLoadingMore(false);
-    }
 
     // Load more characters
     const onLoadMoreCharacters = () => {
         setLoadingMore(true);
 
-        marvelServices
-            .getCharactersByOffset(offset)
+        getCharactersByOffset(offset)
             .then((charactersResponse) => {
                 setCharacters([...characters, ...charactersResponse]);
                 setLoadingMore(false);
-            })
-            .catch(onError);
+            });
+
             setOffset(offset => offset + 9);
     }
 
     // Loading characters
     const onCharactersLoaded = (charactersResponse) => {
         setCharacters(charactersResponse);
-        setLoading(false);
-        setError(false);
     }
 
     // Getting characters
     const getCharacters = (offset) => {
-        setLoading(true);
     
-        marvelServices
-            .getCharactersByOffset(offset)
-            .then(onCharactersLoaded)
-            .catch(onError);
+        getCharactersByOffset(offset)
+            .then(onCharactersLoaded);
     }
 
     // Refs
