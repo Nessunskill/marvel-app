@@ -11,25 +11,19 @@ const CharList = (props) => {
     const {loading, error, getCharactersByOffset} = useMarvelServices();
 
     const [characters, setCharacters] = useState([]);
-
     const [offset, setOffset] = useState(210);
-    const [loadingMore, setLoadingMore] = useState(false);
 
     useEffect(() => {
         getCharacters(offset);
         setOffset(offset => offset + 9);
     }, []);
 
-    // Error
-
     // Load more characters
     const onLoadMoreCharacters = () => {
-        setLoadingMore(true);
 
         getCharactersByOffset(offset)
             .then((charactersResponse) => {
                 setCharacters([...characters, ...charactersResponse]);
-                setLoadingMore(false);
             });
 
             setOffset(offset => offset + 9);
@@ -42,7 +36,6 @@ const CharList = (props) => {
 
     // Getting characters
     const getCharacters = (offset) => {
-    
         getCharactersByOffset(offset)
             .then(onCharactersLoaded);
     }
@@ -56,43 +49,43 @@ const CharList = (props) => {
         itemRefs.current[id].focus();
     }
 
+    const renderItems = (characters) => {
+        return characters.map((item, i) => {
+            let objectFitClass = null;
+            item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ? objectFitClass = 'contain' : objectFitClass = 'cover';
+    
+            return (
+                <li 
+                    onKeyPress={(e) => {
+                        e.preventDefault();
+                        if (e.key === ' ' | e.key === "Enter") {
+                            props.onCharacterSelect(item.id);
+                            focusOnItem(i);
+                        }
+                    }}
+                    tabIndex={0}
+                    ref={el => itemRefs.current[i] = el}
+                    className="char__item"
+                    key={i}
+                    onClick={(e) => {props.onCharacterSelect(item.id); focusOnItem(i)}}>
+                    <img src={item.thumbnail} alt={item.name} style={{objectFit: objectFitClass}}/>
+                    <div className="char__name">{item.name}</div>
+                </li>
+            );
+        });
+    }
+    //1430
+    const content = renderItems(characters);
+
     return (
         <div className="char__list">
             <ul className="char__grid">
 
+                {content}
+
                 {loading && !error ? <div style={{display: 'flex', width: '324%', justifyContent: 'center'}}><Spinner/></div> : null}
                 {error && !loading ? <div style={{display: 'flex', width: '324%', justifyContent: 'center'}}><ErrorMessage/></div> : null}
 
-                {
-                    !loading && !error ?
-                    characters.map((item, i) => {
-                        let objectFitClass = null;
-                        item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ? objectFitClass = 'contain' : objectFitClass = 'cover';
-                
-                        return (
-                            <li 
-                                onKeyPress={(e) => {
-                                    e.preventDefault();
-                                    if (e.key === ' ' | e.key === "Enter") {
-                                        props.onCharacterSelect(item.id);
-                                        focusOnItem(i);
-                                    }
-                                }}
-                                tabIndex={0}
-                                ref={el => itemRefs.current[i] = el}
-                                className="char__item"
-                                key={i}
-                                onClick={(e) => {props.onCharacterSelect(item.id); focusOnItem(i)}}>
-                                <img src={item.thumbnail} alt={item.name} style={{objectFit: objectFitClass}}/>
-                                <div className="char__name">{item.name}</div>
-                            </li>
-                        );
-                    }) : null
-                }
-
-                {
-                    loadingMore ? <div style={{display: 'flex', width: '324%', justifyContent: 'center'}}><Spinner/></div> : null
-                }
             </ul>
             <button 
                     onClick={onLoadMoreCharacters}
