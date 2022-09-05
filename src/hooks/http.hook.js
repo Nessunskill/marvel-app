@@ -28,7 +28,7 @@ export const useHttp = () => {
 
     }, []);
 
-    const clearError = useCallback(() => setError(null), []);
+    //const clearError = useCallback(() => setError(null), []);
 
-    return {loading, error, clearError, request};
+    return {loading, error, request};
 }

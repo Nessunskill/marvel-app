@@ -8,8 +8,6 @@ import mjolnir from '../../resources/img/mjolnir.png';
 
 const RandomChar = () => {
     const [character, setCharacters] = useState({});
-    // const [loading, setLoading] = useState(false);
-    // const [error, setError] = useState(false);
 
     const {loading, error, getCharacterById} = useMarvelServices();
 
@@ -18,14 +16,9 @@ const RandomChar = () => {
         getCharacter(1011937);
     }, []);
 
-
-    // Error
-
-
     // Loading character
     const onCharacterLoad = (character) => {
         setCharacters(character);
-        
     }
 
     // Getting character
@@ -37,7 +30,6 @@ const RandomChar = () => {
     // Getting another character
     const onAnotherCharacter = () => {
         const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-        //const id = 1011000;
         getCharacter(id);
     }
 
