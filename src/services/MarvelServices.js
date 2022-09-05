@@ -1,7 +1,7 @@
 import { useHttp } from '../hooks/http.hook';
 
 const useMarvelServices = () => {
-    const {request, error, loading} = useHttp();
+    const {request, error, loading, clearError} = useHttp();
 
 
     const _apiKey = "apikey=9205f98dfd44cad09017673377d0493d";
@@ -79,7 +79,7 @@ const useMarvelServices = () => {
         return _filterData(result);
     }
 
-    return {loading, error, getCharacterById, getCharactersByOffset}
+    return {loading, error, getCharacterById, getCharactersByOffset, clearError}
 }
 
 export default useMarvelServices;

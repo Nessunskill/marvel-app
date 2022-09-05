@@ -9,7 +9,7 @@ import mjolnir from '../../resources/img/mjolnir.png';
 const RandomChar = () => {
     const [character, setCharacters] = useState({});
 
-    const {loading, error, getCharacterById} = useMarvelServices();
+    const {loading, error, getCharacterById, clearError} = useMarvelServices();
 
     // Component Hooks
     useEffect(() => {
@@ -23,7 +23,8 @@ const RandomChar = () => {
 
     // Getting character
     const getCharacter = (id) => {
-          getCharacterById(id)
+        clearError();
+        getCharacterById(id)
             .then(onCharacterLoad);
     }
 
