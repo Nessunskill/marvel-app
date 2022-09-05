@@ -61,7 +61,7 @@ const CharList = (props) => {
                         if (e.key === ' ' | e.key === "Enter") {
                             props.onCharacterSelect(item.id);
                             focusOnItem(i);
-                        }
+                        }   
                     }}
                     tabIndex={0}
                     ref={el => itemRefs.current[i] = el}
@@ -74,7 +74,7 @@ const CharList = (props) => {
             );
         });
     }
-    //1430
+    //1230
     const content = renderItems(characters);
 
     return (
