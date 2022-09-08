@@ -1,4 +1,5 @@
 import {useState, useEffect, useRef} from 'react';
+import {Transition, CSSTransition} from 'react-transition-group';
 
 import React from 'react';
 import useMarvelServices from '../../services/MarvelServices';
@@ -11,7 +12,8 @@ const CharList = (props) => {
     const {loading, error, getCharactersByOffset} = useMarvelServices();
 
     const [characters, setCharacters] = useState([]);
-    const [offset, setOffset] = useState(210);
+    const [offset, setOffset] = useState(144);
+    const [inProp, setInProp] = useState(false);
 
     useEffect(() => {
         getCharacters(offset);
@@ -53,24 +55,29 @@ const CharList = (props) => {
         return characters.map((item, i) => {
             let objectFitClass = null;
             item.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ? objectFitClass = 'contain' : objectFitClass = 'cover';
-    
+            
             return (
-                <li 
-                    onKeyPress={(e) => {
-                        e.preventDefault();
-                        if (e.key === ' ' | e.key === "Enter") {
-                            props.onCharacterSelect(item.id);
-                            focusOnItem(i);
-                        }   
-                    }}
-                    tabIndex={0}
-                    ref={el => itemRefs.current[i] = el}
-                    className="char__item"
-                    key={i}
-                    onClick={(e) => {props.onCharacterSelect(item.id); focusOnItem(i)}}>
-                    <img src={item.thumbnail} alt={item.name} style={{objectFit: objectFitClass}}/>
-                    <div className="char__name">{item.name}</div>
-                </li>
+                <CSSTransition
+                    in={inProp}
+                    timeout={200}
+                    classNames="char-node"
+                    key={i}>
+                    <li 
+                        onKeyPress={(e) => {
+                            e.preventDefault();
+                            if (e.key === ' ' | e.key === "Enter") {
+                                props.onCharacterSelect(item.id);
+                                focusOnItem(i);
+                            }   
+                        }}
+                        tabIndex={0}
+                        ref={el => itemRefs.current[i] = el}
+                        className="char__item"
+                        onClick={(e) => {props.onCharacterSelect(item.id); focusOnItem(i)}}>
+                        <img src={item.thumbnail} alt={item.name} style={{objectFit: objectFitClass}}/>
+                        <div className="char__name">{item.name}</div>
+                    </li>
+                </CSSTransition>
             );
         });
     }
@@ -88,7 +95,7 @@ const CharList = (props) => {
 
             </ul>
             <button 
-                    onClick={onLoadMoreCharacters}
+                    onClick={() => {onLoadMoreCharacters(); setInProp(inProp => !inProp);}}
                     style={error ? {display: 'none'} : {display: 'block'}}
                     className="button button__main button__long">
                 <div className="inner">load more</div>

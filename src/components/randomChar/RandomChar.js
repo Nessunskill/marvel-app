@@ -8,8 +8,12 @@ import mjolnir from '../../resources/img/mjolnir.png';
 
 const RandomChar = () => {
     const [character, setCharacters] = useState({});
-
     const {loading, error, getCharacterById, clearError} = useMarvelServices();
+
+    // Adding to favorite
+    const onAddToFavorite = () => {
+        localStorage.setItem(character.id, JSON.stringify(character))
+    }
 
     // Component Hooks
     useEffect(() => {
@@ -38,7 +42,7 @@ const RandomChar = () => {
         <div className="randomchar">
             {loading && !error ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}><Spinner/></div> : null}
             {error && !loading ? <ErrorMessage/> : null}
-            {!loading && !error ? <CharacterBlock character={character}/> : null}
+            {!loading && !error ? <CharacterBlock onAddToFavorite={onAddToFavorite} character={character}/> : null}
             <div className="randomchar__static">
                 <p className="randomchar__title">
                     Random character for today!<br/>
@@ -58,8 +62,8 @@ const RandomChar = () => {
     )
 }
 
-const CharacterBlock = (character) => {
-    const {character: {name, description, thumbnail, wiki, homepage}} = character;
+const CharacterBlock = (props) => {
+    const {character: {name, description, thumbnail, homepage}, onAddToFavorite} = props;
 
     let objectFitClass = null;
     thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg' ? objectFitClass = 'contain' : objectFitClass = 'cover';
@@ -74,8 +78,8 @@ const CharacterBlock = (character) => {
                     <a href={homepage} className="button button__main">
                         <div className="inner">homepage</div>
                     </a>
-                    <a href={wiki} className="button button__secondary">
-                        <div className="inner">Wiki</div>
+                    <a onClick={onAddToFavorite} className="button button__secondary">
+                        <div className="inner">Add to favorite</div>
                     </a>
                 </div>
             </div>
